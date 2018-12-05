@@ -20,6 +20,7 @@ var GLOBAL = {
     startTime : "Time Off Start Date",
     endTime: "Time Off End Date",
     requestedHours: "Number of hours requested: *One Day = 8 Hours",
+    email: "Email address for calendar to add PTO to",
   },
   }
 
@@ -63,7 +64,9 @@ function getFormResponse() {
         break;
       case GLOBAL.formMap.requestedHours:
         eventObject.requestedHours = thisResponse;
-        Logger.log(eventObject.requestedHours);
+        break;
+      case GLOBAL.formMap.email:
+        eventObject.email = thisResponse;
         break;
     }
   }
@@ -80,6 +83,11 @@ function createCalendarEvent(eventObject) {
       startTime = moment(eventObject.startTime).toDate(),
       //The end date of the event that will be created
       endTime = moment(eventObject.endTime).toDate();
+  // Invite the requested email included in "Email address for calendar to add PTO to"
+  var options = {
+    guests: eventObject.email,
+    sendInvites: true,
+  };
   // If their requested PTO hours are fewer than 8, create a calendar event that states how many hours they're taking.
   // If they're only taking one day of PTO, just take the start date of the PTO to create a one-day event,
   // otherwise, create an event the length of their longer PTO.
